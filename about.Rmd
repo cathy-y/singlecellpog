@@ -1,5 +1,5 @@
 ---
-title: "About This Website"
+title: "Quality Control"
 ---
 
-More about this website.
+This page will contain QC plots for each sample

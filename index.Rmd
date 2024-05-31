@@ -1,5 +1,7 @@
 ---
-title: "My Website"
+title: "Single-cell Personalized Oncogenomics"
 ---
 
-Hello, Website!
+## About
+
+The purpose of this site is to provide a comprehensive overview of all single-cell analyses performed to date. This link will always be active, and will be updated on a near-daily basis. 

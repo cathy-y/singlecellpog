@@ -4,5 +4,7 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "About"
+    - text: "Quality Control"
       href: about.html
+    - text: "Sample UMAPs"
+      href: umaps.html
