@@ -8,3 +8,5 @@ navbar:
       href: about.html
     - text: "Sample UMAPs"
       href: umaps.html
+    - text: "Immune Composition"
+      href: immune.html

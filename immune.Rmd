@@ -1,0 +1,51 @@
+---
+title: "Analyses of the Immune Microenvironment"
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+source("../PrecisionMed/scFunctions.R")
+```
+
+# Purpose and rationale
+
+In the bulk POG pipeline, patients are assessed for eligibility for immune checkpoint inhibitors. One of the criteria for eligibility is the abundance of CD8+ T-cells, which is inferred from bulk transcription data using CIBERSORT. 
+
+# Table of Contents
+
+1. [Immune cell composition](#immune-cell-composition)
+2. [Correlation with CIBERSORT scores]()
+3. [Presence of T-cell subtypes]()
+4. [T-cell composition of immunological samples]()
+
+# Immune cell composition
+
+```{r}
+# t-cells from all of the samples
+tCells_seuList <- readRDS("../PrecisionMed/Data/singleTcells.RDS")
+```
+
+
+
+# Correlation with CIBERSORT scores
+
+
+# Presence of T-cell subtypes
+
+Cell types of interest:
+
+- CD8+ T-cells 
+- Trm (CD39+CD103+CD8+): Associated with [...]
+- Treg (CD4+FOXP3+): [...]
+
+```{r}
+
+```
+
+## Changes in composition across biopsies
+
+```{r}
+
+```
+
+# T-cell composition of immunological samples
+

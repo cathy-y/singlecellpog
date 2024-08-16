@@ -11,7 +11,7 @@
 
 
 
-<title>Single-cell Personalized Oncogenomics</title>
+<title>Analyses of the Immune Microenvironment</title>
 
 <script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -32,6 +32,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -238,21 +240,42 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Website</a>
+      <a class="navbar-brand" href="index.html">Single-cell POG</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
 </li>
-<li>
-  <a href="about.html">Quality Control</a>
-</li>
-<li>
-  <a href="umaps.html">Sample UMAPs</a>
-</li>
-<li>
-  <a href="immune.html">Immune Composition</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-solid fa-dna"></span>
+     
+    All Samples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Heading 1</li>
+    <li>
+      <a href="page-a.html">Page A</a>
+    </li>
+    <li>
+      <a href="page-b.html">Page B</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Heading 2</li>
+    <li>
+      <a href="page-c.html">Page C</a>
+    </li>
+    <li>
+      <a href="page-d.html">Page D</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -266,16 +289,51 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Single-cell Personalized Oncogenomics</h1>
+<h1 class="title toc-ignore">Analyses of the Immune
+Microenvironment</h1>
 
 </div>
 
 
-<div id="about" class="section level2">
-<h2>About</h2>
-<p>The purpose of this site is to provide a comprehensive overview of
-all single-cell analyses performed to date. This link will always be
-active, and will be updated on a near-daily basis.</p>
+<div id="purpose-and-rationale" class="section level1">
+<h1>Purpose and rationale</h1>
+<p>In the bulk POG pipeline, patients are assessed for eligibility for
+immune checkpoint inhibitors. One of the criteria for eligibility is the
+abundance of CD8+ T-cells, which is inferred from bulk transcription
+data using CIBERSORT.</p>
+</div>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ol style="list-style-type: decimal">
+<li><a href="#immune-cell-composition">Immune cell composition</a></li>
+<li><a href="">Correlation with CIBERSORT scores</a></li>
+<li><a href="">Presence of T-cell subtypes</a></li>
+<li><a href="">T-cell composition of immunological samples</a></li>
+</ol>
+</div>
+<div id="immune-cell-composition" class="section level1">
+<h1>Immune cell composition</h1>
+<pre class="r"><code># t-cells from all of the samples
+tCells_seuList &lt;- readRDS(&quot;../PrecisionMed/Data/singleTcells.RDS&quot;)</code></pre>
+</div>
+<div id="correlation-with-cibersort-scores" class="section level1">
+<h1>Correlation with CIBERSORT scores</h1>
+</div>
+<div id="presence-of-t-cell-subtypes" class="section level1">
+<h1>Presence of T-cell subtypes</h1>
+<p>Cell types of interest:</p>
+<ul>
+<li>CD8+ T-cells</li>
+<li>Trm (CD39+CD103+CD8+): Associated with […]</li>
+<li>Treg (CD4+FOXP3+): […]</li>
+</ul>
+<div id="changes-in-composition-across-biopsies" class="section level2">
+<h2>Changes in composition across biopsies</h2>
+</div>
+</div>
+<div id="t-cell-composition-of-immunological-samples"
+class="section level1">
+<h1>T-cell composition of immunological samples</h1>
 </div>
 
 
