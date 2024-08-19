@@ -1,5 +1,0 @@
----
-title: "Quality Control"
----
-
-This page will contain QC plots for each sample

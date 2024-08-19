@@ -1,51 +1,60 @@
----
-title: "Analyses of the Immune Microenvironment"
----
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
-source("../PrecisionMed/scFunctions.R")
+source("required.R")
+tCells_allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allTCells_merged_fastMNNCorrected.RDS")
 ```
 
-# Purpose and rationale
+# Analysis of the Immune Microenvironment
 
-In the bulk POG pipeline, patients are assessed for eligibility for immune checkpoint inhibitors. One of the criteria for eligibility is the abundance of CD8+ T-cells, which is inferred from bulk transcription data using CIBERSORT. 
+In total, there are `r ncol(tCells_allSamples)` T cells across `r length(unique(tCells_allSamples@meta.data[["ID"]]))` samples
 
-# Table of Contents
+```{r message=FALSE, warning=FALSE}
+DimPlot(tCells_allSamples, reduction = "umap", group.by = "cellSubtype") +
+  ggtitle("T-cell Subtype") +
+  scale_color_nejm()
+```
 
-1. [Immune cell composition](#immune-cell-composition)
-2. [Correlation with CIBERSORT scores]()
-3. [Presence of T-cell subtypes]()
-4. [T-cell composition of immunological samples]()
+## Expression of Immune Checkpoint Markers
 
-# Immune cell composition
+```{r message=FALSE, warning=FALSE, include=FALSE}
+immuneMarkers <- c("PDCD1", "CD276", "HAVCR2", "LAG3", "TIGIT", "VSIR")
 
-```{r}
-# t-cells from all of the samples
-tCells_seuList <- readRDS("../PrecisionMed/Data/singleTcells.RDS")
+# function for plotting markers
+plotICMarkers <- function(sample){
+  tCells_sample <- subset(tCells_allSamples, ID == sample)
+  expMat <- tCells_sample@assays[["RNA"]]@data[immuneMarkers,] %>%
+    t() %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "barcode")
+  
+  umapCoords <- tCells_sample@reductions[["umap"]]@cell.embeddings %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "barcode")
+  
+  df <- inner_join(expMat, umapCoords, by = "barcode") %>%
+    pivot_longer(cols = immuneMarkers, names_to = "Marker", values_to = "Expression")
+  nonZero_df <- dplyr::filter(df, Expression > 0)
+  
+  plot <- df %>%
+    ggplot(aes(x = UMAP_1, y = UMAP_2, colour = Expression)) +
+    geom_point(alpha = 0.5) +
+    geom_point(data = nonZero_df, aes(x = UMAP_1, y = UMAP_2, colour = Expression)) +
+    facet_wrap(~Marker) +
+    theme_classic() +
+    scale_colour_gradient(low = "#CCCCCC", high = "#9C6AAA") +
+    labs(x = "UMAP1", y = "UMAP2", colour = "Normalized\nExpression") +
+    ggtitle(sample)
+  print(plot)
+}
+```
+
+```{r message=FALSE, warning=FALSE}
+samples <- c("POG1128_2", "POG643_1", "POG643_2", "POG318", "POG326")
+for(s in samples){
+  plotICMarkers(s)
+}
 ```
 
 
 
-# Correlation with CIBERSORT scores
-
-
-# Presence of T-cell subtypes
-
-Cell types of interest:
-
-- CD8+ T-cells 
-- Trm (CD39+CD103+CD8+): Associated with [...]
-- Treg (CD4+FOXP3+): [...]
-
-```{r}
-
-```
-
-## Changes in composition across biopsies
-
-```{r}
-
-```
-
-# T-cell composition of immunological samples
 

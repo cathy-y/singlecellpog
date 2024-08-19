@@ -1,12 +1,47 @@
-name: "my-website"
+name: "single-cell-pog"
 navbar:
-  title: "My Website"
+  title: "Single-cell POG"
   left:
     - text: "Home"
+      icon: fa-home
       href: index.html
-    - text: "Quality Control"
-      href: about.html
-    - text: "Sample UMAPs"
-      href: umaps.html
-    - text: "Immune Composition"
+    - text: "All Samples"
+      icon: fa-solid fa-dna
+      menu:
+        - text: "POG003"
+          href: POG003.html
+        - text: "POG130"
+          href: POG130.html
+        - text: "POG147"
+          href: POG147.html
+        - text: "POG196"
+          href: POG196.html
+        - text: "POG217"
+          href: POG217.html
+        - text: "POG318"
+          href: POG318.html
+        - text: "POG326"
+          href: POG326.html
+        - text: "POG415"
+          href: POG415.html
+        - text: "POG590"
+          href: POG590.html
+        - text: "POG609"
+          href: POG609.html
+        - text: "POG643"
+          href: POG643.html
+        - text: "POG650"
+          href: POG650.html
+        - text: "POG716"
+          href: POG716.html
+        - text: "POG732"
+          href: POG732.html
+        - text: "POG785"
+          href: POG785.html
+        - text: "POG1128"
+          href: POG1128.html
+        - text: "POG1329"
+          href: POG1329.html
+    - text: "Immune Microenvironment"
+      icon: fa-solid fa-virus
       href: immune.html
