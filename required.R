@@ -14,3 +14,5 @@ library(cowplot)
 
 path <- "/projects/marralab/cayan_prj/PrecisionMed/Objects/"
 files <- list.files(path)
+
+wholeCohort <- fread("/projects/marralab/cayan_prj/PrecisionMed/Data/WholeCohort.csv")

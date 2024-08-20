@@ -3,9 +3,53 @@ title: "POG003"
 ---
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
+source("required.R")
 files <- c("POG003_2", "POG003_3", "POG003_4")
+```
+
+# Quality Control
+
+```{r warning=FALSE}
+seuList <- list()
 for(f in files){
+  seuList[[f]] <- readRDS(paste0(path, f, "/separate_ProcessedSeurat.RDS"))
   
+  # print 2 plots for each sample
+  qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv"))
+  
+  logLib <- log10(qc$sum)
+  logGenes <- log10(qc$detected)
+  
+  libLine <- median(logLib) - 3 * mad(logLib)
+  genesLine <- median(logGenes) - 3 * mad(logGenes)
+  # qc[is.na(qc)] <- "Not Assigned"
+  
+  p1 <- ggplot(qc, aes(x = log10(sum), y = log10(detected), colour = doublet)) +
+    geom_point(size = 1, alpha = 0.4) +
+    geom_hline(yintercept = genesLine, linetype="dashed", colour = "grey") +
+    geom_vline(xintercept = libLine, linetype="dashed", colour = "grey") +
+    theme_linedraw() +
+    scale_color_d3() +
+    labs(x = "Log10(Number of UMIs)",
+         y = "Log10(Number of Genes)",
+         colour = "scDblFinder\nPrediction")
+  
+  p2 <- ggplot(qc, aes(x = log10(sum), y = subsets_Mito_percent, colour = discard)) +
+    geom_point(size = 1, alpha = 0.4) +
+    # geom_hline(yintercept = genesLine, linetype="dashed", colour = "grey") +
+    geom_vline(xintercept = libLine, linetype="dashed", colour = "grey") +
+    theme_linedraw() +
+    scale_color_d3() +
+    labs(x = "Log10(Number of UMIs)",
+         y = "Percent of Mitochondrial Reads",
+         colour = "Discard")
+  
+  qcKeep <- dplyr::filter(qc, doublet == "singlet", discard == FALSE)
+  print(f)
+  print(paste("Number of cells:", nrow(qc), "| Number of cells kept:", nrow(qcKeep)))
+  print(plot_grid(p1, p2))
 }
 ```
+
+
 

@@ -337,7 +337,57 @@ $(document).ready(function () {
 </div>
 
 
-
+<div id="quality-control" class="section level1">
+<h1>Quality Control</h1>
+<pre class="r"><code>seuList &lt;- list()
+for(f in files){
+  seuList[[f]] &lt;- readRDS(paste0(path, f, &quot;/separate_ProcessedSeurat.RDS&quot;))
+  
+  # print 2 plots for each sample
+  qc &lt;- fread(paste0(path, f, &quot;/QCMetrics_byCell.tsv&quot;))
+  
+  logLib &lt;- log10(qc$sum)
+  logGenes &lt;- log10(qc$detected)
+  
+  libLine &lt;- median(logLib) - 3 * mad(logLib)
+  genesLine &lt;- median(logGenes) - 3 * mad(logGenes)
+  # qc[is.na(qc)] &lt;- &quot;Not Assigned&quot;
+  
+  p1 &lt;- ggplot(qc, aes(x = log10(sum), y = log10(detected), colour = doublet)) +
+    geom_point(size = 1, alpha = 0.4) +
+    geom_hline(yintercept = genesLine, linetype=&quot;dashed&quot;, colour = &quot;grey&quot;) +
+    geom_vline(xintercept = libLine, linetype=&quot;dashed&quot;, colour = &quot;grey&quot;) +
+    theme_linedraw() +
+    scale_color_d3() +
+    labs(x = &quot;Log10(Number of UMIs)&quot;,
+         y = &quot;Log10(Number of Genes)&quot;,
+         colour = &quot;scDblFinder\nPrediction&quot;)
+  
+  p2 &lt;- ggplot(qc, aes(x = log10(sum), y = subsets_Mito_percent, colour = discard)) +
+    geom_point(size = 1, alpha = 0.4) +
+    # geom_hline(yintercept = genesLine, linetype=&quot;dashed&quot;, colour = &quot;grey&quot;) +
+    geom_vline(xintercept = libLine, linetype=&quot;dashed&quot;, colour = &quot;grey&quot;) +
+    theme_linedraw() +
+    scale_color_d3() +
+    labs(x = &quot;Log10(Number of UMIs)&quot;,
+         y = &quot;Percent of Mitochondrial Reads&quot;,
+         colour = &quot;Discard&quot;)
+  
+  qcKeep &lt;- dplyr::filter(qc, doublet == &quot;singlet&quot;, discard == FALSE)
+  print(f)
+  print(paste(&quot;Number of cells:&quot;, nrow(qc), &quot;| Number of cells kept:&quot;, nrow(qcKeep)))
+  print(plot_grid(p1, p2))
+}</code></pre>
+<pre><code>## [1] &quot;POG003_2&quot;
+## [1] &quot;Number of cells: 2220 | Number of cells kept: 2031&quot;</code></pre>
+<p><img src="POG003_files/figure-html/unnamed-chunk-2-1.svg" width="672" /></p>
+<pre><code>## [1] &quot;POG003_3&quot;
+## [1] &quot;Number of cells: 2724 | Number of cells kept: 2491&quot;</code></pre>
+<p><img src="POG003_files/figure-html/unnamed-chunk-2-2.svg" width="672" /></p>
+<pre><code>## [1] &quot;POG003_4&quot;
+## [1] &quot;Number of cells: 1366 | Number of cells kept: 1288&quot;</code></pre>
+<p><img src="POG003_files/figure-html/unnamed-chunk-2-3.svg" width="672" /></p>
+</div>
 
 
 
