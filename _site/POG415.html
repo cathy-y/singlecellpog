@@ -339,7 +339,37 @@ $(document).ready(function () {
 </div>
 
 
+<div id="phylogic-outputs" class="section level1">
+<h1>Phylogic Outputs</h1>
+<pre class="r"><code>phylOut &lt;- fread(paste0(path, files[1], &quot;/phylogicOut/&quot;, f, &quot;.mut_ccfs.txt&quot;))
+phylOut_clusters &lt;- fread(paste0(path, files[1], &quot;/phylogicOut/&quot;, f, &quot;.cluster_ccfs.txt&quot;))
 
+cellClusterEnrichment1 &lt;- fread(paste0(path, files[1], &quot;/phylogicCluster_cellEnrichment.csv&quot;))
+cellClusterEnrichment1$barcode &lt;- convert_atac_indices(gsub(&quot;\\.&quot;, &quot;-&quot;, cellClusterEnrichment1$barcode))
+
+cellClusterEnrichment2 &lt;- fread(paste0(path, files[2], &quot;/phylogicCluster_cellEnrichment.csv&quot;))
+cellClusterEnrichment2$barcode &lt;- convert_atac_indices(gsub(&quot;\\.&quot;, &quot;-&quot;, cellClusterEnrichment2$barcode))</code></pre>
+<div id="expanding-clusters" class="section level2">
+<h2>Expanding Clusters</h2>
+<p>Clusters 3, 6, and 9 expand going from biopsy 1 to biopsy 2. No cells
+in biopsy 1 contain SNVs belonging to clusters 6 and 9.</p>
+<pre class="r"><code>cluster_scores1 &lt;- cellClusterEnrichment1 %&gt;%
+  column_to_rownames(var = &quot;barcode&quot;)
+seu_1 &lt;- AddMetaData(seu_1, cluster_scores1)
+p1 &lt;- FeaturePlot(seu_1, reduction = &quot;rna.umap&quot;, features = &quot;cluster3&quot;) +
+  ggtitle(&quot;POG415, Biopsy 1&quot;)
+
+cluster_scores2 &lt;- cellClusterEnrichment2 %&gt;%
+  column_to_rownames(var = &quot;barcode&quot;)
+seu_2 &lt;- AddMetaData(seu_2, cluster_scores2)
+p2 &lt;- FeaturePlot(seu_2, reduction = &quot;rna.umap&quot;, features = &quot;cluster3&quot;) +
+  ggtitle(&quot;POG415, Biopsy 2&quot;)
+print(plot_grid(p1, p2))</code></pre>
+<p><img src="POG415_files/figure-html/unnamed-chunk-3-1.svg" width="672" />
+Are cell proportions lower than CCFs because Phylogic is wrong, or
+because our scATAC-seq data are too sparse?</p>
+</div>
+</div>
 
 
 

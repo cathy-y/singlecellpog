@@ -5,4 +5,41 @@ title: "POG415"
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 source("required.R")
 files <- c("POG415_1", "POG415_2")
+f <- "POG415"
+
+seu_1 <- readRDS(paste0(path, files[1], "/separate_ProcessedSeurat.RDS"))
+seu_2 <- readRDS(paste0(path, files[2], "/separate_ProcessedSeurat.RDS"))
 ```
+
+# Phylogic Outputs
+
+```{r}
+phylOut <- fread(paste0(path, files[1], "/phylogicOut/", f, ".mut_ccfs.txt"))
+phylOut_clusters <- fread(paste0(path, files[1], "/phylogicOut/", f, ".cluster_ccfs.txt"))
+
+cellClusterEnrichment1 <- fread(paste0(path, files[1], "/phylogicCluster_cellEnrichment.csv"))
+cellClusterEnrichment1$barcode <- convert_atac_indices(gsub("\\.", "-", cellClusterEnrichment1$barcode))
+
+cellClusterEnrichment2 <- fread(paste0(path, files[2], "/phylogicCluster_cellEnrichment.csv"))
+cellClusterEnrichment2$barcode <- convert_atac_indices(gsub("\\.", "-", cellClusterEnrichment2$barcode))
+```
+
+## Expanding Clusters
+
+Clusters 3, 6, and 9 expand going from biopsy 1 to biopsy 2. No cells in biopsy 1 contain SNVs belonging to clusters 6 and 9. 
+
+```{r}
+cluster_scores1 <- cellClusterEnrichment1 %>%
+  column_to_rownames(var = "barcode")
+seu_1 <- AddMetaData(seu_1, cluster_scores1)
+p1 <- FeaturePlot(seu_1, reduction = "rna.umap", features = "cluster3") +
+  ggtitle("POG415, Biopsy 1")
+
+cluster_scores2 <- cellClusterEnrichment2 %>%
+  column_to_rownames(var = "barcode")
+seu_2 <- AddMetaData(seu_2, cluster_scores2)
+p2 <- FeaturePlot(seu_2, reduction = "rna.umap", features = "cluster3") +
+  ggtitle("POG415, Biopsy 2")
+print(plot_grid(p1, p2))
+```
+Are cell proportions lower than CCFs because Phylogic is wrong, or because our scATAC-seq data are too sparse?
