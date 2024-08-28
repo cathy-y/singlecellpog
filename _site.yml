@@ -8,28 +8,30 @@ navbar:
     - text: "All Samples"
       icon: fa-solid fa-dna
       menu:
+        - text: "Multiple Biopsies"
         - text: "POG003"
           href: POG003.html
         - text: "POG130"
           href: POG130.html
-        - text: "POG147"
-          href: POG147.html
-        - text: "POG196"
-          href: POG196.html
         - text: "POG217"
           href: POG217.html
-        - text: "POG318"
-          href: POG318.html
-        - text: "POG326"
-          href: POG326.html
         - text: "POG415"
           href: POG415.html
         - text: "POG590"
           href: POG590.html
-        - text: "POG609"
-          href: POG609.html
         - text: "POG643"
           href: POG643.html
+        - text: "Single Biopsies"
+        - text: "POG147"
+          href: POG147.html
+        - text: "POG196"
+          href: POG196.html
+        - text: "POG318"
+          href: POG318.html
+        - text: "POG326"
+          href: POG326.html
+        - text: "POG609"
+          href: POG609.html
         - text: "POG650"
           href: POG650.html
         - text: "POG716"
@@ -39,7 +41,7 @@ navbar:
         - text: "POG785"
           href: POG785.html
         - text: "POG1128"
-          href: POG1128.html
+          href: POG1128_2.html
         - text: "POG1329"
           href: POG1329.html
     - text: "Immune Microenvironment"

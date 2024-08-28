@@ -1,0 +1,22 @@
+---
+title: "POG147"
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+source("required.R")
+f <- "POG147_1"
+seu <- readRDS(paste0(path, f, "/separate_ProcessedSeurat.RDS"))
+```
+
+# Quality Control
+
+## RNA
+
+```{r warning=FALSE}
+qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv"))
+output <- plotQC(f, qc)
+
+print(f)
+print(paste("Number of cells:", nrow(qc), "| Number of cells kept:", ncol(seu)))
+print(output)
+```
