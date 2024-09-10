@@ -1,0 +1,257 @@
+---
+title: "Additional QC Analyses"
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+source("required.R")
+```
+
+This page addresses the following observations:
+
+- Some samples have poor ATAC-seq quality, which leads to cells with high-quality RNA-seq to be discarded
+
+# How many cells are lost?
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allSamples_mergedProcessedSeurat.RDS")
+lostCells <- data.frame(sample = character(),
+                        numCells_wATAC = numeric(),
+                        numCells_total = numeric())
+for(f in files[-10]){
+  subSeu <- subset(allSamples, sample == f)
+  qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv")) %>%
+    dplyr::filter(discard == FALSE)
+  
+  out <- data.frame(sample = f,
+                    numCells_wATAC = ncol(subSeu),
+                    numCells_total = nrow(qc))
+  lostCells <- rbind(lostCells, out)
+}
+```
+
+```{r}
+lostCells %>%
+  `colnames<-`(c("sample", "with ATAC filtering", "no ATAC filtering")) %>%
+  pivot_longer(cols = -sample, names_to = "filtering", values_to = "numberCells") %>%
+  ggplot(aes(x = sample, y = numberCells, fill = filtering)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_nejm() +
+  labs(x = "Sample", y = "Number of Cells Kept", fill = "Filtering Strategy")
+```
+
+# Comparing SNV calls from ATAC and RNA
+
+For cells with both high-quality RNA and ATAC:
+
+- What proportion of SNVs are called?
+- How many SNVs are called per cell?
+
+## Proportion of SNVs detected
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+rna_atac_snvCalls <- data.frame(
+  sample = character(0),
+  numSNVs = numeric(0),
+  propSNVs_rna = numeric(0),
+  propSNVs_atac = numeric(0)
+)
+
+for(f in files[-10]){
+  rna_cbFile <- paste0(path, f, "/rna_self_cbSniffer_counts_CB.tsv")
+  atac_cbFile <- paste0(path, f, "/self_cbSniffer_counts_CB.tsv")
+  
+  if(!file.exists(rna_cbFile) | !file.exists(atac_cbFile)){
+    next
+  }
+  
+  # snvs from bulk
+  bulkSNVs <- fread(paste0(path, f, "/self_POGSNVcalls.tsv"))
+  numInputSNVs <- nrow(bulkSNVs)
+  
+  nonZero_alt_rna <- fread(rna_cbFile) %>%
+    dplyr::filter(alt_count > 0)
+  nonZero_alt_atac <- fread(atac_cbFile) %>%
+    dplyr::filter(alt_count > 0)
+  
+  out <- data.frame(
+    sample = f,
+    numSNVs = numInputSNVs,
+    propSNVs_rna = length(unique(nonZero_alt_rna$gene)) / numInputSNVs,
+    propSNVs_atac = length(unique(nonZero_alt_atac$gene)) / numInputSNVs
+  )
+  rna_atac_snvCalls <- rbind(rna_atac_snvCalls, out)
+}
+```
+
+```{r}
+rna_atac_snvCalls <- rna_atac_snvCalls %>%
+  `colnames<-`(c("sample", "numSNVs", "RNA", "ATAC")) %>%
+  pivot_longer(cols = -c(sample, numSNVs), names_to = "Modality", values_to = "Proportion")
+
+rna_atac_snvCalls %>%
+  ggplot(aes(x = reorder(sample, numSNVs), y = Proportion, fill = log10(numSNVs), colour = Modality)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  geom_text(data = dplyr::filter(rna_atac_snvCalls, Modality == "ATAC"),
+            aes(label = numSNVs), angle = 90, colour = "black", nudge_y = 0.1, size = 3.5) +
+  ylim(c(0, 1)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_nejm() +
+  labs(x = "Sample", y = "Proportion of SNVs Detected", fill = "Log10(Number\nof SNVs)")
+```
+
+The proportion of SNVs detected from scRNA-seq is lower than the proportion detected from scATAC-seq. However, there is no direct relationship between the number of SNVs and the proportion of them that are detected.
+
+### Impact of SNV location on detectability
+
+```{r}
+
+```
+
+## SNVs detected per cell
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+snvCalls_perCell <- data.frame(
+  sample = character(0),
+  cellType = character(0),
+  Modality = character(0),
+  numSNVs = numeric(0)
+)
+
+# helper function
+get_perCell_snvCounts <- function(cbFile, modality, celltype){
+  file <- fread(cbFile)
+  
+  if(modality == "RNA"){
+    bc <- inputBarcodes_rna
+  } else{bc <- inputBarcodes_atac}
+  
+  if(celltype == "Malignant"){
+    file <- dplyr::filter(file, barcode %in% bc$barcode) 
+  } else{dplyr::filter(file, !(barcode %in% bc$barcode))}
+  
+  out <- file %>%
+    group_by(barcode) %>%
+    summarize(numSNVs = sum(alt_count)) %>%
+    mutate(Modality = modality,
+           cellType = celltype,
+           sample = f) %>%
+    dplyr::select(colnames(snvCalls_perCell))
+  return(out)
+}
+
+for(f in files[-10]){
+  rna_cbFile <- paste0(path, f, "/rna_self_cbSniffer_counts_CB.tsv")
+  atac_cbFile <- paste0(path, f, "/self_cbSniffer_counts_CB.tsv")
+  
+  if(!file.exists(rna_cbFile) | !file.exists(atac_cbFile)){
+    next
+  }
+  
+  # malignant cells
+  inputBarcodes_rna <- fread(paste0(path, f, "/barcodesMalignant_labelled.csv"))
+  inputBarcodes_atac <- inputBarcodes_rna %>%
+    mutate(barcode = convert_rna_indices(barcode))
+  
+  snvCalls_perCell <- Reduce(rbind,
+                             list(snvCalls_perCell,
+                                  get_perCell_snvCounts(rna_cbFile, "RNA", "Malignant"),
+                                  get_perCell_snvCounts(rna_cbFile, "RNA", "Non-malignant"),
+                                  get_perCell_snvCounts(atac_cbFile, "ATAC", "Malignant"),
+                                  get_perCell_snvCounts(atac_cbFile, "ATAC", "Non-malignant")))
+}
+```
+
+```{r fig.width=10, fig.height=50}
+snvCalls_perCell %>%
+  ggplot(aes(x = log(numSNVs + 0.001), fill = cellType)) +
+  geom_density(alpha = 0.4) +
+  facet_grid(rows = vars(sample), cols = vars(Modality), scales = "free_x") +
+  theme_bw() +
+  labs(x = "Log10(Number of SNVs + 0.001)", fill = "Cell Type") +
+  scale_fill_nejm()
+```
+
+Except for POG1329 and POG785_1, SNVs detected from RNA can distinguish between malignant and non-malignant cells
+
+# Comparing cells with and without high-quality ATAC-seq
+
+Cell Ranger ATAC filters cells based on the proportion of fragments that overlap peaks. 
+
+## Number of SNVs called
+
+### POG003, biopsy 1
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+cellBarcodes <- fread("/projects/marralab/cayan_prj/PrecisionMed/Objects/POG003_2/separate_barcodes.tsv")
+allCells_snv_atac <- fread("/projects/marralab/cayan_prj/PrecisionMed/Objects/POG003_2/cbSnifferOuts/allCells_cbATAC_counts_CB.tsv")
+
+totalCounts <- allCells_snv_atac %>%
+  group_by(barcode) %>%
+  summarize(Fragments = sum(total_CB),
+            SNVs = sum(alt_count)) %>%
+  mutate(withATAC = ifelse(barcode %in% cellBarcodes$barcodes, "Kept", "Discarded")) %>%
+  pivot_longer(cols = c(Fragments, SNVs), names_to = "Type", values_to = "Value")
+```
+
+```{r}
+totalCounts %>%
+  ggplot(aes(x = withATAC, y = Value)) +
+  geom_violin() +
+  facet_wrap(~Type) +
+  theme_bw() +
+  labs(x = "Cell Ranger ATAC status", y = "Number per Cell")
+```
+
+# Retention of all cells with high-quality RNA
+
+## POG003, biopsy 1
+
+```{r}
+wATAC_seu <- readRDS(paste0(path, "POG003_2/separate_ProcessedSeurat.RDS"))
+rnaOnly_seu <- readRDS(paste0(path, "POG003_2/rna_ProcessedSeurat.RDS"))
+rnaOnly_seu$atacStatus <- ifelse(colnames(rnaOnly_seu) %in% convert_atac_indices(cellBarcodes$barcodes), "Kept", "Discarded")
+DimPlot(rnaOnly_seu, group.by = "atacStatus", reduction = "rna.umap") +
+  ggtitle(NULL)
+```
+
+Cells discarded due to poor-quality ATAC-seq do not form RNA-driven clusters separate from cells that were kept. 
+
+### Examining the use of RNA for calling malignant clusters
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+allCells_snv_rna <- fread("/projects/marralab/cayan_prj/PrecisionMed/Objects/POG003_2/cbSnifferOuts/allCells_cbRNA_counts_CB.tsv")
+rnaSNVScores <- allCells_snv_rna %>%
+  group_by(barcode) %>%
+  summarize(Fragments = sum(total_CB),
+            SNVs = sum(alt_count)) %>%
+  mutate(snvScore = SNVs / Fragments) %>%
+  column_to_rownames(var = "barcode")
+rnaOnly_seu <- AddMetaData(rnaOnly_seu, rnaSNVScores)
+
+atacSNVScores <- allCells_snv_atac %>%
+  group_by(barcode) %>%
+  summarize(Fragments = sum(total_CB),
+            SNVs = sum(alt_count)) %>%
+  mutate(snvScore_atac = SNVs / Fragments,
+         barcode = convert_atac_indices(barcode)) %>%
+  column_to_rownames(var = "barcode")
+rnaOnly_seu <- AddMetaData(rnaOnly_seu, atacSNVScores)
+```
+
+```{r}
+p1 <- FeaturePlot(rnaOnly_seu, features = "snvScore", reduction = "rna.umap") +
+  ggtitle("SNV Scores from RNA")
+p2 <- FeaturePlot(rnaOnly_seu, features = "snvScore_atac", reduction = "rna.umap") +
+  ggtitle("SNV Scores from ATAC")
+plot_grid(p1, p2)
+```
+
+
+
+
+
+
+

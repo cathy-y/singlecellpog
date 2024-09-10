@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Additional QC Analyses</title>
+
+<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Single-cell POG</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="fa fa-solid fa-dna"></span>
+     
+    All Samples
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Multiple Biopsies</li>
+    <li>
+      <a href="POG003.html">POG003</a>
+    </li>
+    <li>
+      <a href="POG130.html">POG130</a>
+    </li>
+    <li>
+      <a href="POG217.html">POG217</a>
+    </li>
+    <li>
+      <a href="POG415.html">POG415</a>
+    </li>
+    <li>
+      <a href="POG590.html">POG590</a>
+    </li>
+    <li>
+      <a href="POG643.html">POG643</a>
+    </li>
+    <li class="dropdown-header">Single Biopsies</li>
+    <li>
+      <a href="POG147.html">POG147</a>
+    </li>
+    <li>
+      <a href="POG196.html">POG196</a>
+    </li>
+    <li>
+      <a href="POG318.html">POG318</a>
+    </li>
+    <li>
+      <a href="POG326.html">POG326</a>
+    </li>
+    <li>
+      <a href="POG609.html">POG609</a>
+    </li>
+    <li>
+      <a href="POG650.html">POG650</a>
+    </li>
+    <li>
+      <a href="POG716.html">POG716</a>
+    </li>
+    <li>
+      <a href="POG732.html">POG732</a>
+    </li>
+    <li>
+      <a href="POG785.html">POG785</a>
+    </li>
+    <li>
+      <a href="POG1128_2.html">POG1128</a>
+    </li>
+    <li>
+      <a href="POG1329.html">POG1329</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="additionalQC.html">
+    <span class="fa fa-solid fa-clipboard-list"></span>
+     
+    Additional QC
+  </a>
+</li>
+<li>
+  <a href="immune.html">
+    <span class="fa fa-solid fa-virus"></span>
+     
+    Immune Microenvironment
+  </a>
+</li>
+<li>
+  <a></a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Additional QC Analyses</h1>
+
+</div>
+
+
+<p>This page addresses the following observations:</p>
+<ul>
+<li>Some samples have poor ATAC-seq quality, which leads to cells with
+high-quality RNA-seq to be discarded</li>
+</ul>
+<div id="how-many-cells-are-lost" class="section level1">
+<h1>How many cells are lost?</h1>
+<pre class="r"><code>lostCells %&gt;%
+  `colnames&lt;-`(c(&quot;sample&quot;, &quot;with ATAC filtering&quot;, &quot;no ATAC filtering&quot;)) %&gt;%
+  pivot_longer(cols = -sample, names_to = &quot;filtering&quot;, values_to = &quot;numberCells&quot;) %&gt;%
+  ggplot(aes(x = sample, y = numberCells, fill = filtering)) +
+  geom_bar(position = &quot;dodge&quot;, stat = &quot;identity&quot;) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_nejm() +
+  labs(x = &quot;Sample&quot;, y = &quot;Number of Cells Kept&quot;, fill = &quot;Filtering Strategy&quot;)</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-3-1.svg" width="672" /></p>
+</div>
+<div id="comparing-snv-calls-from-atac-and-rna" class="section level1">
+<h1>Comparing SNV calls from ATAC and RNA</h1>
+<p>For cells with both high-quality RNA and ATAC:</p>
+<ul>
+<li>What proportion of SNVs are called?</li>
+<li>How many SNVs are called per cell?</li>
+</ul>
+<div id="proportion-of-snvs-detected" class="section level2">
+<h2>Proportion of SNVs detected</h2>
+<pre class="r"><code>rna_atac_snvCalls &lt;- rna_atac_snvCalls %&gt;%
+  `colnames&lt;-`(c(&quot;sample&quot;, &quot;numSNVs&quot;, &quot;RNA&quot;, &quot;ATAC&quot;)) %&gt;%
+  pivot_longer(cols = -c(sample, numSNVs), names_to = &quot;Modality&quot;, values_to = &quot;Proportion&quot;)
+
+rna_atac_snvCalls %&gt;%
+  ggplot(aes(x = reorder(sample, numSNVs), y = Proportion, fill = log10(numSNVs), colour = Modality)) +
+  geom_bar(position = &quot;dodge&quot;, stat = &quot;identity&quot;) +
+  geom_text(data = dplyr::filter(rna_atac_snvCalls, Modality == &quot;ATAC&quot;),
+            aes(label = numSNVs), angle = 90, colour = &quot;black&quot;, nudge_y = 0.1, size = 3.5) +
+  ylim(c(0, 1)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_nejm() +
+  labs(x = &quot;Sample&quot;, y = &quot;Proportion of SNVs Detected&quot;, fill = &quot;Log10(Number\nof SNVs)&quot;)</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-5-1.svg" width="672" /></p>
+<p>The proportion of SNVs detected from scRNA-seq is lower than the
+proportion detected from scATAC-seq. However, there is no direct
+relationship between the number of SNVs and the proportion of them that
+are detected.</p>
+<div id="impact-of-snv-location-on-detectability"
+class="section level3">
+<h3>Impact of SNV location on detectability</h3>
+</div>
+</div>
+<div id="snvs-detected-per-cell" class="section level2">
+<h2>SNVs detected per cell</h2>
+<pre class="r"><code>snvCalls_perCell %&gt;%
+  ggplot(aes(x = log(numSNVs + 0.001), fill = cellType)) +
+  geom_density(alpha = 0.4) +
+  facet_grid(rows = vars(sample), cols = vars(Modality), scales = &quot;free_x&quot;) +
+  theme_bw() +
+  labs(x = &quot;Log10(Number of SNVs + 0.001)&quot;, fill = &quot;Cell Type&quot;) +
+  scale_fill_nejm()</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-8-1.svg" width="960" /></p>
+<p>Except for POG1329 and POG785_1, SNVs detected from RNA can
+distinguish between malignant and non-malignant cells</p>
+</div>
+</div>
+<div id="comparing-cells-with-and-without-high-quality-atac-seq"
+class="section level1">
+<h1>Comparing cells with and without high-quality ATAC-seq</h1>
+<p>Cell Ranger ATAC filters cells based on the proportion of fragments
+that overlap peaks.</p>
+<div id="number-of-snvs-called" class="section level2">
+<h2>Number of SNVs called</h2>
+<div id="pog003-biopsy-1" class="section level3">
+<h3>POG003, biopsy 1</h3>
+<pre class="r"><code>totalCounts %&gt;%
+  ggplot(aes(x = withATAC, y = Value)) +
+  geom_violin() +
+  facet_wrap(~Type) +
+  theme_bw() +
+  labs(x = &quot;Cell Ranger ATAC status&quot;, y = &quot;Number per Cell&quot;)</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-10-1.svg" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="retention-of-all-cells-with-high-quality-rna"
+class="section level1">
+<h1>Retention of all cells with high-quality RNA</h1>
+<div id="pog003-biopsy-1-1" class="section level2">
+<h2>POG003, biopsy 1</h2>
+<pre class="r"><code>wATAC_seu &lt;- readRDS(paste0(path, &quot;POG003_2/separate_ProcessedSeurat.RDS&quot;))
+rnaOnly_seu &lt;- readRDS(paste0(path, &quot;POG003_2/rna_ProcessedSeurat.RDS&quot;))
+rnaOnly_seu$atacStatus &lt;- ifelse(colnames(rnaOnly_seu) %in% convert_atac_indices(cellBarcodes$barcodes), &quot;Kept&quot;, &quot;Discarded&quot;)
+DimPlot(rnaOnly_seu, group.by = &quot;atacStatus&quot;, reduction = &quot;rna.umap&quot;) +
+  ggtitle(NULL)</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-11-1.svg" width="672" /></p>
+<p>Cells discarded due to poor-quality ATAC-seq do not form RNA-driven
+clusters separate from cells that were kept.</p>
+<div id="examining-the-use-of-rna-for-calling-malignant-clusters"
+class="section level3">
+<h3>Examining the use of RNA for calling malignant clusters</h3>
+<pre class="r"><code>p1 &lt;- FeaturePlot(rnaOnly_seu, features = &quot;snvScore&quot;, reduction = &quot;rna.umap&quot;) +
+  ggtitle(&quot;SNV Scores from RNA&quot;)
+p2 &lt;- FeaturePlot(rnaOnly_seu, features = &quot;snvScore_atac&quot;, reduction = &quot;rna.umap&quot;) +
+  ggtitle(&quot;SNV Scores from ATAC&quot;)
+plot_grid(p1, p2)</code></pre>
+<p><img src="additionalQC_files/figure-html/unnamed-chunk-13-1.svg" width="672" /></p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -44,6 +44,14 @@ navbar:
           href: POG1128_2.html
         - text: "POG1329"
           href: POG1329.html
+    - text: "Additional QC"
+      icon: fa-solid fa-clipboard-list
+      href: additionalQC.html
     - text: "Immune Microenvironment"
       icon: fa-solid fa-virus
       href: immune.html
+    - text:       
+      
+      
+      
+      

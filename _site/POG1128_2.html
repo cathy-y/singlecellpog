@@ -316,11 +316,21 @@ $(document).ready(function () {
   </ul>
 </li>
 <li>
+  <a href="additionalQC.html">
+    <span class="fa fa-solid fa-clipboard-list"></span>
+     
+    Additional QC
+  </a>
+</li>
+<li>
   <a href="immune.html">
     <span class="fa fa-solid fa-virus"></span>
      
     Immune Microenvironment
   </a>
+</li>
+<li>
+  <a></a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -339,6 +349,24 @@ $(document).ready(function () {
 </div>
 
 
+<div id="quality-control" class="section level1">
+<h1>Quality Control</h1>
+<div id="rna" class="section level2">
+<h2>RNA</h2>
+<pre class="r"><code>qc &lt;- fread(paste0(path, f, &quot;/QCMetrics_byCell.tsv&quot;))
+output &lt;- plotQC(f, qc)
+
+print(f)</code></pre>
+<pre><code>## [1] &quot;POG1128_2&quot;</code></pre>
+<pre class="r"><code>print(paste(&quot;Number of cells:&quot;, nrow(qc), &quot;| Number of cells kept:&quot;, ncol(seu)))</code></pre>
+<pre><code>## [1] &quot;Number of cells: 8370 | Number of cells kept: 5658&quot;</code></pre>
+<pre class="r"><code>print(output)</code></pre>
+<p><img src="POG1128_2_files/figure-html/unnamed-chunk-2-1.svg" width="672" /></p>
+</div>
+<div id="atac" class="section level2">
+<h2>ATAC</h2>
+</div>
+</div>
 <div id="phylogic-outputs" class="section level1">
 <h1>Phylogic Outputs</h1>
 <pre class="r"><code>phylOut &lt;- fread(paste0(path, f, &quot;/phylogicOut/&quot;, f, &quot;.mut_ccfs.txt&quot;))
@@ -367,7 +395,7 @@ seu &lt;- AddMetaData(seu, cluster_scores)
 p2 &lt;- FeaturePlot(seu, reduction = &quot;rna.umap&quot;, features = &quot;cluster1&quot;) +
   ggtitle(&quot;Enrichment score for\ncluster of universal mutations&quot;)
 print(plot_grid(p1, p2))</code></pre>
-<p><img src="POG1128_2_files/figure-html/unnamed-chunk-4-1.svg" width="672" /></p>
+<p><img src="POG1128_2_files/figure-html/unnamed-chunk-6-1.svg" width="672" /></p>
 </div>
 <div id="other-clusters" class="section level2">
 <h2>Other clusters</h2>
@@ -375,7 +403,7 @@ print(plot_grid(p1, p2))</code></pre>
   print(FeaturePlot(seu, reduction = &quot;rna.umap&quot;, features = n) +
           ggtitle(n))
 }</code></pre>
-<p><img src="POG1128_2_files/figure-html/unnamed-chunk-5-1.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-2.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-3.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-4.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-5.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-6.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-7.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-5-8.svg" width="672" /></p>
+<p><img src="POG1128_2_files/figure-html/unnamed-chunk-7-1.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-2.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-3.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-4.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-5.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-6.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-7.svg" width="672" /><img src="POG1128_2_files/figure-html/unnamed-chunk-7-8.svg" width="672" /></p>
 </div>
 </div>
 
