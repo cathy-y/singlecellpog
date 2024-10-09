@@ -1,0 +1,159 @@
+---
+title: "Cell Type Annotation"
+output: html_document
+date: "2024-10-09"
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+xaringanExtra::use_panelset()
+
+source("required.R")
+allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allSamples_mergedProcessedSeurat.RDS")
+```
+
+# Identifying Malignant Cells
+
+## Detecting SNVs in Cells
+
+```{r}
+rna_atac_snvCalls <- data.frame(
+  sample = character(0),
+  numSNVs = numeric(0),
+  propSNVs_rna = numeric(0),
+  propSNVs_atac = numeric(0)
+)
+
+for(f in unique(allSamples$sample)){
+  rna_cbFile <- paste0(path, f, "/rna_self_cbSniffer_counts_CB.tsv")
+  atac_cbFile <- paste0(path, f, "/self_cbSniffer_counts_CB.tsv")
+  
+  if(!file.exists(rna_cbFile) | !file.exists(atac_cbFile)){
+    next
+  }
+  
+  # snvs from bulk
+  bulkSNVs <- fread(paste0(path, f, "/self_POGSNVcalls.tsv"))
+  numInputSNVs <- nrow(bulkSNVs)
+  
+  nonZero_alt_rna <- fread(rna_cbFile) %>%
+    dplyr::filter(alt_count > 0)
+  nonZero_alt_atac <- fread(atac_cbFile) %>%
+    dplyr::filter(alt_count > 0)
+  
+  out <- data.frame(
+    sample = f,
+    numSNVs = numInputSNVs,
+    propSNVs_rna = length(unique(nonZero_alt_rna$gene)) / numInputSNVs,
+    propSNVs_atac = length(unique(nonZero_alt_atac$gene)) / numInputSNVs
+  )
+  rna_atac_snvCalls <- rbind(rna_atac_snvCalls, out)
+}
+```
+
+POG calls SNVs using WGS data. These SNVs can be detected in scRNA-seq and scATAC-seq reads. Across all samples, the median proportion of SNVs detected in each sample is `r median(rna_atac_snvCalls$propSNVs_rna)` for scRNA-seq and `r median(rna_atac_snvCalls$propSNVs_atac)` for scATAC-seq. The proportion does not increase with increasing number of input SNVs. 
+
+```{r}
+rna_atac_snvCalls <- rna_atac_snvCalls %>%
+  `colnames<-`(c("sample", "numSNVs", "RNA", "ATAC")) %>%
+  pivot_longer(cols = -c(sample, numSNVs), names_to = "Modality", values_to = "Proportion")
+
+rna_atac_snvCalls %>%
+  ggplot(aes(x = reorder(sample, numSNVs), y = Proportion, fill = log10(numSNVs), colour = Modality)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  geom_text(data = dplyr::filter(rna_atac_snvCalls, Modality == "ATAC"),
+            aes(label = numSNVs), angle = 90, colour = "black", nudge_y = 0.1, size = 3.5) +
+  ylim(c(0, 1)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  scale_colour_nejm() +
+  labs(x = "Sample", y = "Proportion of SNVs Detected", fill = "Log10(Number\nof SNVs)")
+```
+
+## Calculating an SNV Score
+
+SNV scores are calculated for each cell by dividing the number of SNVs detected by the number of fragments that overlap an SNV.
+
+```{r, include=FALSE}
+# helper functions
+# calculate snv scores
+calcSNVScore <- function(cbOutput){
+  output <- cbOutput %>%
+    group_by(barcode) %>%
+    summarize(numOverlappingFragments = sum(total_CB),
+              numSNVs = sum(alt_count)) %>%
+    mutate(snvScore = numSNVs / numOverlappingFragments)
+  return(output)
+}
+
+# plot snv scores
+plotSNVScore <- function(f){
+  seu <- readRDS(paste0(path, f, "/rna_ProcessedSeurat.RDS"))
+  
+  df <- data.frame(barcode = character(),
+                   cluster = character(),
+                   mode = character(),
+                   snvScore = numeric())
+  for(mode in c("RNA", "ATAC")){
+    cbOutput <- fread(paste0(path, f, "/cbSnifferOuts/allCells_cb", mode, "_counts_CB.tsv"))
+    if(mode == "ATAC"){cbOutput$barcode <- convert_atac_indices(cbOutput$barcode)}
+    
+    scores <- calcSNVScore(cbOutput) %>%
+      dplyr::select(barcode, snvScore)
+    
+    clusters <- data.frame(barcode = colnames(seu),
+                           cluster = seu$seurat_clusters)
+    out <- left_join(clusters, scores, by = "barcode") %>%
+      mutate(mode = paste0(mode, "score")) %>%
+      dplyr::select(colnames(df))
+    df <- rbind(df, out)
+  }
+  
+  df[is.na(df)] <- 0
+  seu <- AddMetaData(seu,
+                     pivot_wider(df, names_from = "mode", values_from = "snvScore") %>%
+                       column_to_rownames(var = "barcode"))
+  
+  # plotting
+  p1 <- FeaturePlot(seu, reduction = "rna.umap", features = c("ATACscore", "RNAscore"))
+  p2 <- ggplot(df, aes(x = cluster, y = snvScore)) +
+    geom_violin() +
+    geom_boxplot(width = 0.1) +
+    facet_wrap(~mode) +
+    theme_linedraw() +
+    labs(x = "Cluster", y = "SNV Score")
+  
+  plotOut <- plot_grid(p1, p2, ncol = 1)
+  print(plotOut)
+}
+
+# make tabs
+make_tab <- function(f) {           # function to make the tabs
+  cat("::: {.panel}\n")             # Open tab
+  cat("##", f, "{.panel-name}\n")   # Label tab
+  p <- plotSNVScore(f)              # Create plot
+  # print(p)                          # Display plot
+  cat("\n")                         # Space
+  cat(":::\n")                      # Close tab
+}
+```
+
+::::: {.panelset}
+```{r, fig.width=20, fig.height=20, results = 'asis'}
+sampList <- unique(allSamples$sample) %>%   # Get a list of islands present in the dataset
+    as.character()
+walk(sampList, make_tab)     # make the tabs for each island that is there
+```
+:::::
+
+## Comparing Cells with and without High Quality scATAC-seq
+
+
+
+# Annotating Non-malignant Cells
+
+
+
+
+
+

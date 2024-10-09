@@ -5,6 +5,12 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
+    - text: "Quality Control"
+      icon: fa-solid fa-clipboard-list
+      href: basicQC.html
+    - text: "Cell Type Annotation"
+      icon: fa-solid fa-disease
+      href: cellAnnot.html
     - text: "All Samples"
       icon: fa-solid fa-dna
       menu:
@@ -44,13 +50,7 @@ navbar:
           href: POG1128_2.html
         - text: "POG1329"
           href: POG1329.html
-    - text: "Additional QC"
-      icon: fa-solid fa-clipboard-list
-      href: additionalQC.html
-    - text: "Immune Microenvironment"
-      icon: fa-solid fa-virus
-      href: immune.html
-    - text:       
+      
       
       
       

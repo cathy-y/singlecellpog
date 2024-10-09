@@ -14,7 +14,7 @@ files <- c("POG003_2", "POG003_3", "POG003_4")
 ```{r warning=FALSE}
 seuList <- list()
 for(f in files){
-  seuList[[f]] <- readRDS(paste0(path, f, "/separate_ProcessedSeurat.RDS"))
+  seuList[[f]] <- readRDS(paste0(path, f, "/rna_ProcessedSeurat.RDS"))
   
   # print 2 plots for each sample
   qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv"))
@@ -29,6 +29,31 @@ for(f in files){
 ```
 
 ## ATAC
+
+```{r}
+
+```
+
+# SNV scores
+
+```{r}
+for(i in seq(1, length(seuList))){
+  f <- names(seuList)[i]
+  snvScores <- fread(paste0(path, f, "/snvScores_rnaFiltering.tsv")) %>%
+    column_to_rownames(var = "barcode")
+  
+  seu <- seuList[[i]]
+  seu <- AddMetaData(seu, snvScores)
+  print(FeaturePlot(seu, reduction = "rna.umap", features = "snvScore") + 
+          ggtitle(f) +
+          labs(colour = "SNV Score"))
+}
+```
+
+
+
+
+
 
 
 

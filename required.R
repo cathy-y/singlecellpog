@@ -13,6 +13,9 @@ library(ggrepel)
 library(cowplot)
 library(jcolors)
 
+# r markdown
+library(xaringanExtra)
+
 path <- "/projects/marralab/cayan_prj/PrecisionMed/Objects/"
 files <- list.files(path)
 
@@ -38,7 +41,8 @@ convert_atac_indices <- function(atac_bc){
   return(valid_rna_bc)
 }
 
-plotQC <- function(f, qc){
+plotQC <- function(f){
+  qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv"))
   logLib <- log10(qc$sum)
   logGenes <- log10(qc$detected)
   

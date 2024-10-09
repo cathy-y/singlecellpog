@@ -1,0 +1,69 @@
+---
+title: "Quality Control"
+output: html_document
+date: "2024-10-09"
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+source("required.R")
+allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allSamples_mergedProcessedSeurat.RDS")
+
+# helper functions
+# make qc plots in tabs
+make_tab <- function(f) {           # function to make the tabs
+  cat("::: {.panel}\n")             # Open tab
+  cat("##", f, "{.panel-name}\n")   # Label tab
+  p <- plotQC(f)                    # Create plot
+  print(p)                          # Display plot
+  cat("\n")                         # Space
+  cat(":::\n")                      # Close tab
+}
+```
+
+# Cell Quality
+
+```{r, include=FALSE}
+lostCells <- data.frame(sample = character(),
+                        totalCells = numeric(),
+                        numCells_wATAC = numeric(),
+                        numCells_noATAC = numeric())
+for(f in unique(allSamples$sample)){
+  subSeu <- subset(allSamples, sample == f)
+  qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv")) 
+  qc_wFiltering <- qc %>%
+    dplyr::filter(discard == FALSE)
+  
+  out <- data.frame(sample = f,
+                    totalCells = nrow(qc),
+                    numCells_wATAC = nrow(qc_wFiltering),
+                    numCells_noATAC = ncol(subSeu))
+  lostCells <- rbind(lostCells, out)
+}
+```
+
+## Overview of Cells Kept
+
+* Cells called from Cell Ranger: Number of cells considered to be intact, live cells by 10X's software based on scRNA-seq data
+* Filtered on RNA: Number of cells kept after filtering based on the number of UMIs per cell, number of genes detected per cell, and proportion of reads mapping to mitochondrial genes
+* Filtering on RNA & ATAC: Number of cells kept after filtering based on Cell Ranger ATAC, and the above criteria
+
+```{r}
+colnames(lostCells) <- c("Sample", "Cells Called from Cell Ranger", "Filtered on RNA", "Filtered on RNA & ATAC")
+knitr::kable(lostCells, "pipe")
+```
+
+## QC Plots for Samples
+
+```{r}
+xaringanExtra::use_panelset()
+```
+
+::::: {.panelset}
+```{r, results = 'asis'}
+sampList <- unique(allSamples$sample) %>% 
+    as.character()
+walk(sampList, make_tab)
+```
+:::::
