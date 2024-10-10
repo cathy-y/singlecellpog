@@ -61,7 +61,7 @@ xaringanExtra::use_panelset()
 ```
 
 ::::: {.panelset}
-```{r, results = 'asis'}
+```{r, fig.width=10, results = 'asis'}
 sampList <- unique(allSamples$sample) %>% 
     as.character()
 walk(sampList, make_tab)

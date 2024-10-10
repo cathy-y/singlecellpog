@@ -14,7 +14,38 @@ allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allSamples
 
 # Identifying Malignant Cells
 
-## Detecting SNVs in Cells
+## Comparing the Utility of scATAC-seq and scRNA-seq for SNV Detection
+
+scATAC-seq is more sensitive to sample/cell quality. For our samples, it means that cells are filtered out for having poor quality scATAC-seq even when they have high quality scRNA-seq. Cells are not discarded in a cell type- or cluster-specific way. 
+
+```{r}
+plotATACDiscard <- function(f){
+  cellBarcodes <- fread(paste0(path, f, "/separate_barcodes.tsv"))
+  seu <- readRDS(paste0(path, f, "/rna_ProcessedSeurat.RDS"))
+  seu$atacStatus <- ifelse(colnames(seu) %in% convert_atac_indices(cellBarcodes$barcodes), "Kept", "Discarded")
+  plot <- DimPlot(seu, group.by = "atacStatus", reduction = "rna.umap") +
+    ggtitle(NULL)
+  print(plot)
+}
+
+# make tabs
+makeTab_atacDisc <- function(f) {   # function to make the tabs
+  cat("::: {.panel}\n")             # Open tab
+  cat("##", f, "{.panel-name}\n")   # Label tab
+  p <- plotATACDiscard(f)           # Create plot
+  # print(p)                        # Display plot
+  cat("\n")                         # Space
+  cat(":::\n")                      # Close tab
+}
+```
+
+::::: {.panelset}
+```{r, fig.width=7, fig.height=5, results = 'asis'}
+walk(sampList, makeTab_atacDisc)     # make the tabs for each island that is there
+```
+:::::
+
+### Detecting SNVs in Cells
 
 ```{r}
 rna_atac_snvCalls <- data.frame(
@@ -70,9 +101,9 @@ rna_atac_snvCalls %>%
   labs(x = "Sample", y = "Proportion of SNVs Detected", fill = "Log10(Number\nof SNVs)")
 ```
 
-## Calculating an SNV Score
+### Calculating an SNV Score
 
-SNV scores are calculated for each cell by dividing the number of SNVs detected by the number of fragments that overlap an SNV.
+SNV scores are calculated for each cell by dividing the number of SNVs detected by the number of fragments that overlap an SNV. Visual inspection of UMAPs suggest that detection of SNVs in scRNA-seq and scATAC-seq are equally capable of differentiating between malignant and non-malignant clusters. 
 
 ```{r, include=FALSE}
 # helper functions
@@ -128,30 +159,29 @@ plotSNVScore <- function(f){
 }
 
 # make tabs
-make_tab <- function(f) {           # function to make the tabs
+makeTab_snvScore <- function(f) {   # function to make the tabs
   cat("::: {.panel}\n")             # Open tab
   cat("##", f, "{.panel-name}\n")   # Label tab
   p <- plotSNVScore(f)              # Create plot
-  # print(p)                          # Display plot
+  # print(p)                        # Display plot
   cat("\n")                         # Space
   cat(":::\n")                      # Close tab
 }
 ```
 
 ::::: {.panelset}
-```{r, fig.width=20, fig.height=20, results = 'asis'}
+```{r, fig.width=15, fig.height=15, results = 'asis'}
 sampList <- unique(allSamples$sample) %>%   # Get a list of islands present in the dataset
     as.character()
-walk(sampList, make_tab)     # make the tabs for each island that is there
+walk(sampList, makeTab_snvScore)     # make the tabs for each island that is there
 ```
 :::::
 
-## Comparing Cells with and without High Quality scATAC-seq
-
-
-
 # Annotating Non-malignant Cells
 
+```{r}
+
+```
 
 
 

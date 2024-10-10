@@ -17,7 +17,7 @@ allSamples <- readRDS("/projects/marralab/cayan_prj/PrecisionMed/Data/allSamples
 lostCells <- data.frame(sample = character(),
                         numCells_wATAC = numeric(),
                         numCells_total = numeric())
-for(f in files[-10]){
+for(f in unique(allSamples$sample)){
   subSeu <- subset(allSamples, sample == f)
   qc <- fread(paste0(path, f, "/QCMetrics_byCell.tsv")) %>%
     dplyr::filter(discard == FALSE)
@@ -58,7 +58,7 @@ rna_atac_snvCalls <- data.frame(
   propSNVs_atac = numeric(0)
 )
 
-for(f in files[-10]){
+for(f in unique(allSamples$sample)){
   rna_cbFile <- paste0(path, f, "/rna_self_cbSniffer_counts_CB.tsv")
   atac_cbFile <- paste0(path, f, "/self_cbSniffer_counts_CB.tsv")
   
@@ -142,7 +142,7 @@ get_perCell_snvCounts <- function(cbFile, modality, celltype){
   return(out)
 }
 
-for(f in files[-10]){
+for(f in unique(allSamples$sample)){
   rna_cbFile <- paste0(path, f, "/rna_self_cbSniffer_counts_CB.tsv")
   atac_cbFile <- paste0(path, f, "/self_cbSniffer_counts_CB.tsv")
   

@@ -352,125 +352,236 @@ $(document).ready(function () {
 
 <div id="identifying-malignant-cells" class="section level1">
 <h1>Identifying Malignant Cells</h1>
-<div id="detecting-snvs-in-cells" class="section level2">
-<h2>Detecting SNVs in Cells</h2>
+<div
+id="comparing-the-utility-of-scatac-seq-and-scrna-seq-for-snv-detection"
+class="section level2">
+<h2>Comparing the Utility of scATAC-seq and scRNA-seq for SNV
+Detection</h2>
+<p>scATAC-seq is more sensitive to sample/cell quality. For our samples,
+it means that cells are filtered out for having poor quality scATAC-seq
+even when they have high quality scRNA-seq. Cells are not discarded in a
+cell type- or cluster-specific way.</p>
+</div>
+<div class="panelset">
+<div id="pog003_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG003_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-1.svg" width="672" /></p>
+</div>
+<div id="pog003_3" class="section level2 panel-name panel">
+<h2 class="panel-name">POG003_3</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-2.svg" width="672" /></p>
+</div>
+<div id="pog003_4" class="section level2 panel-name panel">
+<h2 class="panel-name">POG003_4</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-3.svg" width="672" /></p>
+</div>
+<div id="pog1128_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG1128_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-4.svg" width="672" /></p>
+</div>
+<div id="pog130_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG130_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-5.svg" width="672" /></p>
+</div>
+<div id="pog130_3" class="section level2 panel-name panel">
+<h2 class="panel-name">POG130_3</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-6.svg" width="672" /></p>
+</div>
+<div id="pog130_4" class="section level2 panel-name panel">
+<h2 class="panel-name">POG130_4</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-7.svg" width="672" /></p>
+</div>
+<div id="pog1329" class="section level2 panel-name panel">
+<h2 class="panel-name">POG1329</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-8.svg" width="672" /></p>
+</div>
+<div id="pog147_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG147_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-9.svg" width="672" /></p>
+</div>
+<div id="pog196" class="section level2 panel-name panel">
+<h2 class="panel-name">POG196</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-10.svg" width="672" /></p>
+</div>
+<div id="pog217_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG217_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-11.svg" width="672" /></p>
+</div>
+<div id="pog217_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG217_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-12.svg" width="672" /></p>
+</div>
+<div id="pog318" class="section level2 panel-name panel">
+<h2 class="panel-name">POG318</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-13.svg" width="672" /></p>
+</div>
+<div id="pog326" class="section level2 panel-name panel">
+<h2 class="panel-name">POG326</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-14.svg" width="672" /></p>
+</div>
+<div id="pog415_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG415_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-15.svg" width="672" /></p>
+</div>
+<div id="pog415_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG415_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-16.svg" width="672" /></p>
+</div>
+<div id="pog590_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG590_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-17.svg" width="672" /></p>
+</div>
+<div id="pog590_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG590_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-18.svg" width="672" /></p>
+</div>
+<div id="pog609" class="section level2 panel-name panel">
+<h2 class="panel-name">POG609</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-19.svg" width="672" /></p>
+</div>
+<div id="pog643_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG643_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-20.svg" width="672" /></p>
+</div>
+<div id="pog643_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG643_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-21.svg" width="672" /></p>
+</div>
+<div id="pog650_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG650_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-22.svg" width="672" /></p>
+</div>
+<div id="pog716" class="section level2 panel-name panel">
+<h2 class="panel-name">POG716</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-23.svg" width="672" /></p>
+</div>
+<div id="pog732_2" class="section level2 panel-name panel">
+<h2 class="panel-name">POG732_2</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-24.svg" width="672" /></p>
+</div>
+<div id="pog785_1" class="section level2 panel-name panel">
+<h2 class="panel-name">POG785_1</h2>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-25.svg" width="672" /></p>
+</div>
+</div>
+<div id="detecting-snvs-in-cells" class="section level3">
+<h3>Detecting SNVs in Cells</h3>
 <p>POG calls SNVs using WGS data. These SNVs can be detected in
 scRNA-seq and scATAC-seq reads. Across all samples, the median
 proportion of SNVs detected in each sample is 0.0973367 for scRNA-seq
 and 0.4225946 for scATAC-seq. The proportion does not increase with
 increasing number of input SNVs.</p>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-2-1.svg" width="672" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-1.svg" width="672" /></p>
 </div>
-<div id="calculating-an-snv-score" class="section level2">
-<h2>Calculating an SNV Score</h2>
+<div id="calculating-an-snv-score" class="section level3">
+<h3>Calculating an SNV Score</h3>
 <p>SNV scores are calculated for each cell by dividing the number of
-SNVs detected by the number of fragments that overlap an SNV.</p>
+SNVs detected by the number of fragments that overlap an SNV. Visual
+inspection of UMAPs suggest that detection of SNVs in scRNA-seq and
+scATAC-seq are equally capable of differentiating between malignant and
+non-malignant clusters.</p>
 </div>
 <div class="panelset">
-<div id="pog003_2" class="section level2 panel-name panel">
+<div id="pog003_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG003_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-1.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-2.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-1.svg" width="1440" /></p>
 </div>
-<div id="pog003_3" class="section level2 panel-name panel">
+<div id="pog003_3-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG003_3</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-3.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-4.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-2.svg" width="1440" /></p>
 </div>
-<div id="pog003_4" class="section level2 panel-name panel">
+<div id="pog003_4-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG003_4</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-5.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-6.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-3.svg" width="1440" /></p>
 </div>
-<div id="pog1128_2" class="section level2 panel-name panel">
+<div id="pog1128_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG1128_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-7.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-8.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-4.svg" width="1440" /></p>
 </div>
-<div id="pog130_1" class="section level2 panel-name panel">
+<div id="pog130_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG130_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-9.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-10.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-5.svg" width="1440" /></p>
 </div>
-<div id="pog130_3" class="section level2 panel-name panel">
+<div id="pog130_3-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG130_3</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-11.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-12.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-6.svg" width="1440" /></p>
 </div>
-<div id="pog130_4" class="section level2 panel-name panel">
+<div id="pog130_4-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG130_4</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-13.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-14.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-7.svg" width="1440" /></p>
 </div>
-<div id="pog1329" class="section level2 panel-name panel">
+<div id="pog1329-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG1329</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-15.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-16.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-8.svg" width="1440" /></p>
 </div>
-<div id="pog147_1" class="section level2 panel-name panel">
+<div id="pog147_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG147_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-17.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-18.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-9.svg" width="1440" /></p>
 </div>
-<div id="pog196" class="section level2 panel-name panel">
+<div id="pog196-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG196</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-19.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-20.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-10.svg" width="1440" /></p>
 </div>
-<div id="pog217_1" class="section level2 panel-name panel">
+<div id="pog217_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG217_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-21.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-22.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-11.svg" width="1440" /></p>
 </div>
-<div id="pog217_2" class="section level2 panel-name panel">
+<div id="pog217_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG217_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-23.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-24.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-12.svg" width="1440" /></p>
 </div>
-<div id="pog318" class="section level2 panel-name panel">
+<div id="pog318-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG318</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-25.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-26.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-13.svg" width="1440" /></p>
 </div>
-<div id="pog326" class="section level2 panel-name panel">
+<div id="pog326-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG326</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-27.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-28.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-14.svg" width="1440" /></p>
 </div>
-<div id="pog415_1" class="section level2 panel-name panel">
+<div id="pog415_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG415_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-29.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-30.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-15.svg" width="1440" /></p>
 </div>
-<div id="pog415_2" class="section level2 panel-name panel">
+<div id="pog415_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG415_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-31.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-32.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-16.svg" width="1440" /></p>
 </div>
-<div id="pog590_1" class="section level2 panel-name panel">
+<div id="pog590_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG590_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-33.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-34.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-17.svg" width="1440" /></p>
 </div>
-<div id="pog590_2" class="section level2 panel-name panel">
+<div id="pog590_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG590_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-35.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-36.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-18.svg" width="1440" /></p>
 </div>
-<div id="pog609" class="section level2 panel-name panel">
+<div id="pog609-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG609</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-37.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-38.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-19.svg" width="1440" /></p>
 </div>
-<div id="pog643_1" class="section level2 panel-name panel">
+<div id="pog643_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG643_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-39.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-40.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-20.svg" width="1440" /></p>
 </div>
-<div id="pog643_2" class="section level2 panel-name panel">
+<div id="pog643_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG643_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-41.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-42.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-21.svg" width="1440" /></p>
 </div>
-<div id="pog650_1" class="section level2 panel-name panel">
+<div id="pog650_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG650_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-43.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-44.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-22.svg" width="1440" /></p>
 </div>
-<div id="pog716" class="section level2 panel-name panel">
+<div id="pog716-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG716</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-45.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-46.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-23.svg" width="1440" /></p>
 </div>
-<div id="pog732_2" class="section level2 panel-name panel">
+<div id="pog732_2-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG732_2</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-47.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-48.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-24.svg" width="1440" /></p>
 </div>
-<div id="pog785_1" class="section level2 panel-name panel">
+<div id="pog785_1-1" class="section level2 panel-name panel">
 <h2 class="panel-name">POG785_1</h2>
-<p><img src="cellAnnot_files/figure-html/unnamed-chunk-4-49.svg" width="1920" /><img src="cellAnnot_files/figure-html/unnamed-chunk-4-50.svg" width="1920" /></p>
+<p><img src="cellAnnot_files/figure-html/unnamed-chunk-6-25.svg" width="1440" /></p>
 </div>
-</div>
-<div id="comparing-cells-with-and-without-high-quality-scatac-seq"
-class="section level2">
-<h2>Comparing Cells with and without High Quality scATAC-seq</h2>
 </div>
 </div>
 <div id="annotating-non-malignant-cells" class="section level1">
